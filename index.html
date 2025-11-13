@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Web3 Info — Read Only Demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9faff;
+    color: #333;
+    margin: 40px auto;
+    max-width: 600px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  h2 {
+    color: #1a73e8;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  input[type="text"], #rpcInput {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 8px;
+    margin: 10px 0 20px 0;
+    box-sizing: border-box;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s ease;
+  }
+
+  input[type="text"]:focus, #rpcInput:focus {
+    border-color: #1a73e8;
+    outline: none;
+    box-shadow: 0 0 6px #cce0ff;
+  }
+
+  button#connectBtn {
+    background-color: #1a73e8;
+    border: none;
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button#connectBtn:hover {
+    background-color: #155ab6;
+  }
+
+  #chainInfo, #blockInfo {
+    font-size: 18px;
+    margin-top: 20px;
+    padding: 12px 15px;
+    background-color: #e3f2fd;
+    border-left: 5px solid #1a73e8;
+    border-radius: 4px;
+  }
+
+  #chainInfo.error, #blockInfo.error {
+    background-color: #ffebee;
+    border-left-color: #e53935;
+    color: #b71c1c;
+  }
+</style>
+
+</head>
+<body>
+  <h2>Web3 Info — Read-Only Demo</h2>
+  <input id="rpcInput" value="https://eth-sepolia.g.alchemy.com/v2/VZRDd88-6FvwZHUaRLarf" />
+
+
+  <button id="connectBtn">Connect</button>
+  <div id="chainInfo"></div>
+  <div id="blockInfo"></div>
+  <script>
+    const rpcInput = document.getElementById('rpcInput');
+    const connectBtn = document.getElementById('connectBtn');
+    const chainInfo = document.getElementById('chainInfo');
+    const blockInfo = document.getElementById('blockInfo');
+    let provider = null;
+
+
+    connectBtn.onclick = async () => {
+      try {
+        const rpc = rpcInput.value.trim();
+        provider = new ethers.providers.JsonRpcProvider(rpc);
+        const network = await provider.getNetwork();
+        chainInfo.innerText = `Connected to: ${network.name} (Chain ID: ${network.chainId})`;
+        const block = await provider.getBlockNumber();
+        blockInfo.innerText = 'Latest block: ' + block;
+      } catch (e) {
+        chainInfo.innerText = 'Error: ' + e.message;
+      }
+    };
+  </script>
+</body>
+</html>
