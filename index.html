@@ -93,8 +93,22 @@
         provider = new ethers.providers.JsonRpcProvider(rpc);
         const network = await provider.getNetwork();
         chainInfo.innerText = `Connected to: ${network.name} (Chain ID: ${network.chainId})`;
-        const block = await provider.getBlockNumber();
-        blockInfo.innerText = 'Latest block: ' + block;
+        const blockNumber = await provider.getBlockNumber();
+blockInfo.innerText = 'Latest block: ' + blockNumber;
+
+// Get current gas price in gwei (ethers.js returns wei)
+const gasPrice = await provider.getGasPrice();
+const gasPriceGwei = ethers.utils.formatUnits(gasPrice, "gwei");
+
+// Get the latest block's timestamp
+const blockData = await provider.getBlock(blockNumber);
+const blockTimestamp = new Date(blockData.timestamp * 1000);
+
+// Display gas price and timestamp below block number
+blockInfo.innerText +=
+    '\nGas Price: ' + gasPriceGwei + ' Gwei' +
+    '\nBlock Timestamp: ' + blockTimestamp.toLocaleString();
+
       } catch (e) {
         chainInfo.innerText = 'Error: ' + e.message;
       }
